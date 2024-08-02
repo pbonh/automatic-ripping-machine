@@ -5,7 +5,7 @@ arm_docker_setup_script_url: "https://raw.githubusercontent.com/automatic-rippin
 arm_docker_setup_script_install_dir: "{{ ansible_env.HOME }}/arm_setup_script"
 arm_docker_setup_script_install_path: "{{ arm_docker_setup_script_install_dir }}/{{ arm_docker_setup_script_filename }}"
 arm_username: "arm"
-arm_user_uid: 1000
+arm_user_uid: 1010
 arm_user_groups: "sudo"
 arm_user_homedir: "{{ ansible_env.HOME }}/{{ arm_username }}"
 arm_media_dirs:
