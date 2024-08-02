@@ -11,6 +11,7 @@
     update_cache: true
 
 - name: Add the '{{ arm_username }}' System User
+  become: true
   ansible.builtin.user:
     name: "{{ arm_username }}"
     comment: Automatic Ripping Machine System User
@@ -20,6 +21,7 @@
     append: true
 
 - name: Setup Media Directories
+  become: true
   file: 
     path: "{{ item }}"
     state: directory
