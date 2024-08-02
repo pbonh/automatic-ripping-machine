@@ -1,0 +1,16 @@
+---
+- name: Install ARM Prerequisites
+  hosts: localhost
+  connection: local
+  tasks:
+    - import_role:
+        name: roles/docker
+
+- name: Install ARM
+  hosts: localhost
+  connection: local
+  vars_files:
+    - ../vars/automatic-ripping-machine.yml
+  tasks:
+    - import_role:
+        name: roles/automatic-ripping-machine

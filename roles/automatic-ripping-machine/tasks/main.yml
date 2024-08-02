@@ -1,0 +1,44 @@
+---
+- name: Install ARM Prerequisites
+  become: true
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+  apt:
+    name:
+      - lsscsi
+      - software-properties-common
+    state: latest
+    update_cache: true
+
+- name: Add the '{{ arm_username }}' System User
+  ansible.builtin.user:
+    name: "{{ arm_username }}"
+    comment: Automatic Ripping Machine System User
+    uid: "{{ arm_user_uid }}"
+    groups: "{{ arm_user_groups }}"
+    create_home: true
+    append: true
+
+- name: Setup Media Directories
+  file: 
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ arm_username }}"
+    group: "{{ arm_username }}"
+  loop: "{{ arm_media_dirs }}"
+
+- name: Setup Install Script Directory
+  file: 
+    path: "{{ arm_docker_setup_script_install_dir }}"
+    state: directory
+
+- name: Download ARM Installer
+  get_url:
+    url: "{{ arm_docker_setup_script_url }}"
+    dest: "{{ arm_docker_setup_script_install_path }}"
+    mode: +x
+
+- name: Install ARM(Docker)
+  become: true
+  script:
+    cmd: "{{ arm_docker_setup_script_install_path }}"

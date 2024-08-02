@@ -1,0 +1,112 @@
+- name: Install Docker CE Prerequisites
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: latest
+    update_cache: yes
+
+- name: Add Docker CE Apt GPG Key
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+  apt_key:
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker CE Apt Repository
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Install Docker CE
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Ubuntu"
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose
+    state: latest
+    update_cache: yes
+
+- name: Enable Docker CE Repo
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+  changed_when: false
+  command: dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install ContainerD
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name: "https://download.docker.com/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.10-3.2.el7.x86_64.rpm"
+    state: present
+
+- name: Install Docker CE
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+  dnf:
+    name:
+      - curl
+      - docker-ce
+      - docker-compose
+    state: present
+
+- name: Setup Docker SystemD Daemon
+  become: yes
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Create Docker Group
+  group:
+    name: docker
+    state: present
+
+- name: Add User to Docker Group
+  become: yes
+  user:
+    name: '{{ ansible_user }}'
+    groups: docker
+    append: yes
+
+- name: Fedora 31/32 Workaround
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+    - ansible_facts['distribution_major_version'] == "32"
+  changed_when: false
+  command: grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
+
+- name: Fedora 31/32 Workaround
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+    - ansible_facts['distribution_major_version'] == "32"
+  changed_when: false
+  command: firewall-cmd --permanent --zone=trusted --add-interface=docker0
+
+- name: Fedora 31/32 Workaround
+  become: yes
+  when:
+    - ansible_facts['distribution'] == "Fedora"
+    - ansible_facts['distribution_major_version'] == "32"
+  changed_when: false
+  command: firewall-cmd --permanent --zone=FedoraWorkstation --add-masquerade
