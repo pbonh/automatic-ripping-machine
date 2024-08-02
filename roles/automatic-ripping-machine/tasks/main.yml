@@ -19,15 +19,20 @@
     groups: "{{ arm_user_groups }}"
     create_home: true
     append: true
+  register: arm_user_info
 
 - name: Setup Media Directories
   become: true
-  file: 
+  file:
     path: "{{ item }}"
     state: directory
     owner: "{{ arm_username }}"
     group: "{{ arm_username }}"
-  loop: "{{ arm_media_dirs }}"
+  loop:
+    - "{{ arm_user_info.home }}/logs"
+    - "{{ arm_user_info.home }}/music"
+    - "{{ arm_user_info.home }}/media"
+    - "{{ arm_user_info.home }}/config"
 
 - name: Setup Install Script Directory
   file: 

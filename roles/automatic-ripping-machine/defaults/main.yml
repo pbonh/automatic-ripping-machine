@@ -8,8 +8,3 @@ arm_username: "arm"
 arm_user_uid: 1010
 arm_user_groups: "sudo,docker,cdrom,video"
 arm_user_homedir: "{{ ansible_env.HOME }}/{{ arm_username }}"
-arm_media_dirs:
-  - "{{ arm_user_homedir }}/logs"
-  - "{{ arm_user_homedir }}/music"
-  - "{{ arm_user_homedir }}/media"
-  - "{{ arm_user_homedir }}/config"
