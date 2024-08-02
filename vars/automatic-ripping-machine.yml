@@ -1,3 +1,3 @@
 ---
-arm_username: "{{ arm }}"
+arm_username: "arm"
 makemkv_license_key: "{{ lookup('env', 'MAKEMKV_LICENSE_KEY') }}"
