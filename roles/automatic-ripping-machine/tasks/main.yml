@@ -51,6 +51,7 @@
     cmd: "{{ arm_docker_setup_script_install_path }}"
 
 - name: Enable Running Docker as '{{ arm_username }}'
+  become: true
   community.general.sudoers:
     name: "{{ arm_username }}"
     group: "{{ arm_user_group }}"
