@@ -29,6 +29,7 @@
     owner: "{{ arm_username }}"
     group: "{{ arm_user_group }}"
   loop:
+    - "{{ arm_user_info.home }}"
     - "{{ arm_user_info.home }}/logs"
     - "{{ arm_user_info.home }}/music"
     - "{{ arm_user_info.home }}/media"
