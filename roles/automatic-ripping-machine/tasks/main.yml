@@ -27,7 +27,7 @@
     path: "{{ item }}"
     state: directory
     owner: "{{ arm_username }}"
-    group: "{{ arm_username }}"
+    group: "{{ arm_user_group }}"
   loop:
     - "{{ arm_user_info.home }}/logs"
     - "{{ arm_user_info.home }}/music"
@@ -49,3 +49,10 @@
   become: true
   script:
     cmd: "{{ arm_docker_setup_script_install_path }}"
+
+- name: Enable Running Docker as '{{ arm_username }}'
+  community.general.sudoers:
+    name: "{{ arm_username }}"
+    group: "{{ arm_user_group }}"
+    host: "{{ arm_hostname }}"
+    commands: "{{ docker_bin }}"

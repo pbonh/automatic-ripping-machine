@@ -11,6 +11,6 @@ install-requirements:
   {{ task_prelude }} ansible-galaxy install -r requirements.yml
   {{ task_prelude }} ansible-galaxy collection install -r requirements.yml
 
-devbox:
-  {{ task_prelude }} ansible-playbook playbooks/arm.yml
-
+arm:
+  ansible-galaxy collection install community.general
+  ansible-playbook playbooks/arm.yml --ask-become-pass
