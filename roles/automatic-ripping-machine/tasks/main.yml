@@ -7,6 +7,8 @@
     name:
       - lsscsi
       - software-properties-common
+      - mkvtoolnix
+      - mediainfo
     state: latest
     update_cache: true
 
